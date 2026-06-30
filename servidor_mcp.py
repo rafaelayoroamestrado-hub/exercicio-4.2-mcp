@@ -1,1 +1,18 @@
-import httpxecho from mcp.server.fastmcp import FastMCPecho mcp = FastMCP("tarefas-mcp")echo API = "http://localhost:8000"echo @mcp.tool()echo async def criar_tarefa(titulo: str) -> dict:echo     async with httpx.AsyncClient() as client:echo         resp = await client.post(f"{API}/tarefas", json={"titulo": titulo}, timeout=10)echo         resp.raise_for_status()echo         return resp.json()echo @mcp.tool()echo async def listar_tarefas() -> list:echo     async with httpx.AsyncClient() as client:echo         resp = await client.get(f"{API}/tarefas", timeout=10)echo         resp.raise_for_status()echo         return resp.json()echo if __name__ == "__main__":echo     mcp.run()
+import httpx
+from mcp.server.fastmcp import FastMCP
+mcp = FastMCP("tarefas-mcp")
+API = "http://localhost:8000"
+@mcp.tool()
+async def criar_tarefa(titulo: str) -> dict:
+    async with httpx.AsyncClient() as client:
+        resp = await client.post(f"{API}/tarefas", json={"titulo": titulo}, timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+@mcp.tool()
+async def listar_tarefas() -> list:
+    async with httpx.AsyncClient() as client:
+        resp = await client.get(f"{API}/tarefas", timeout=10)
+        resp.raise_for_status()
+        return resp.json()
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
