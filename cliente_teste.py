@@ -30,7 +30,9 @@ async def main():
 
 if __name__ == "__main__":
     dicionario_final = asyncio.run(main())
-    json_final = json.dumps(dicionario_final, indent=2)
     
-    print("<mcp_test>")
-    print(json_final)
+    # Transforma em JSON em uma ÚNICA linha (sem o indent=2)
+    json_final = json.dumps(dicionario_final)
+    
+    # Imprime as tags e o JSON tudo colado na mesma linha
+    print(f"<mcp_test>{json_final}</mcp_test>")
