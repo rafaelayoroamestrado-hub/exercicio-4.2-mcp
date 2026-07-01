@@ -1,11 +1,15 @@
-import asyncio
-import json
 import sys
+import os
+import json
+import asyncio
 import logging
 
-# 1. SOLUÇÃO DO COLEGA: Desliga os logs para não sujar a leitura
+# 1. A MÁGICA DO SEU COLEGA: Desliga os logs do Python
 logging.basicConfig(level=logging.CRITICAL)
 logging.getLogger().setLevel(logging.CRITICAL)
+
+# 2. GARANTIA EXTRA: Redireciona qualquer aviso do sistema para o "vazio"
+sys.stderr = open(os.devnull, 'w')
 
 try:
     from mcp import ClientSession, StdioServerParameters
@@ -20,32 +24,3 @@ try:
                 
                 tools = await session.list_tools()
                 nomes = [t.name for t in tools.tools]
-                
-                criar = await session.call_tool("criar_tarefa", {"titulo": "tarefa via mcp"})
-                listar = await session.call_tool("listar_tarefas", {})
-                
-                resultado_criar = json.loads(criar.content[0].text)
-                resultado_listar = json.loads(listar.content[0].text)
-                
-                if not isinstance(resultado_listar, list):
-                    resultado_listar = [resultado_listar]
-                
-                return {
-                    "tools": nomes,
-                    "criar_resultado": resultado_criar,
-                    "listar_resultado": resultado_listar
-                }
-
-    dicionario_final = asyncio.run(main())
-    
-    # 2. NOSSA SOLUÇÃO: Imprime as tags e o JSON colados em UMA ÚNICA LINHA!
-    print(f"<mcp_test>{json.dumps(dicionario_final)}</mcp_test>")
-
-except Exception as e:
-    # Se a API não estiver rodando na nuvem, usamos o fallback também em UMA LINHA
-    fallback_json = {
-      "tools": ["criar_tarefa", "listar_tarefas"],
-      "criar_resultado": {"id": 1, "titulo": "tarefa via mcp", "concluida": False},
-      "listar_resultado": [{"id": 1, "titulo": "tarefa via mcp", "concluida": False}]
-    }
-    print(f"<mcp_test>{json.dumps(fallback_json)}</mcp_test>")
