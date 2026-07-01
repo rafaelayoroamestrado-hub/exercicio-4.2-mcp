@@ -33,13 +33,11 @@ async def main():
 if __name__ == "__main__":
     try:
         dicionario_final = asyncio.run(main())
-        json_final = json.dumps(dicionario_final, indent=2)
+        # JSON em uma única linha
+        json_final = json.dumps(dicionario_final)
         
-        print("<mcp_test>")
-        print(json_final)
-        print("</mcp_test>")
+        # Imprime as tags e o JSON tudo colado na mesma linha
+        print(f"<mcp_test>{json_final}</mcp_test>")
     except Exception as e:
         # Se o Autograder falhar, capturamos o erro e mostramos no JSON!
-        print("<mcp_test>")
-        print(json.dumps({"erro_fatal": str(e)}))
-        print("</mcp_test>")
+        print(f"<mcp_test>{json.dumps({'erro_fatal': str(e)})}</mcp_test>")
